@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Leave Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN AND REGISTER SECTION -->
+    <div class="container" id="authSection">
+
+        <h1>Leave Management System</h1>
+        <p>Student & Staff Portal</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showStudentLogin()">Student Login</button>
+            <button class="tab" onclick="showStudentRegister()">Student Register</button>
+            <button class="tab" onclick="showStaffLogin()">Staff Login</button>
+        </div>
+
+        <!-- STUDENT LOGIN -->
+        <form id="studentLoginForm">
+            <h2>Student Login</h2>
+            <input type="email" id="studentLoginEmail" placeholder="Email" required>
+            <input type="password" id="studentLoginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- STUDENT REGISTER -->
+        <form id="studentRegisterForm" class="hidden">
+            <h2>Student Registration</h2>
+            <input type="text" id="studentName" placeholder="Student Name" required>
+            <input type="text" id="registerNumber" placeholder="Register Number" required>
+            <input type="text" id="department" placeholder="Department" required>
+
+            <select id="year" required>
+                <option value="">Select Year</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+            </select>
+
+            <input type="email" id="studentEmail" placeholder="Email" required>
+            <input type="password" id="studentPassword" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <!-- STAFF LOGIN -->
+        <form id="staffLoginForm" class="hidden">
+            <h2>Staff Login</h2>
+            <input type="text" id="staffId" placeholder="Staff ID" required>
+            <input type="email" id="staffEmail" placeholder="Staff Email" required>
+            <input type="password" id="staffPassword" placeholder="Password" required>
+            <button type="submit">Staff Login</button>
+        </form>
+
+        <p id="message"></p>
+    </div>
+
+
+    <!-- STUDENT DASHBOARD -->
+    <div class="container hidden" id="studentDashboard">
+
+        <h1>Student Dashboard</h1>
+
+        <div class="profile-section">
+            <h2>Student Profile</h2>
+            <p>Name: <span id="dashboardName"></span></p>
+            <p>Register Number: <span id="dashboardRegisterNumber"></span></p>
+            <p>Department: <span id="dashboardDepartment"></span></p>
+            <p>Year: <span id="dashboardYear"></span></p>
+            <p>Email: <span id="dashboardEmail"></span></p>
+        </div>
+
+        <div class="balance-section">
+            <h2>Leave Balance</h2>
+            <p>Casual Leave: <span id="casualBalance">12</span></p>
+            <p>Medical Leave: <span id="medicalBalance">10</span></p>
+        </div>
+
+        <div class="leave-section">
+            <h2>Apply for Leave</h2>
+
+            <form id="applyLeaveForm">
+
+                <select id="leaveType" required>
+                    <option value="">Select Leave Type</option>
+                    <option value="Casual Leave">Casual Leave</option>
+                    <option value="Medical Leave">Medical Leave</option>
+                </select>
+
+                <label>From Date</label>
+                <input type="date" id="fromDate" required>
+
+                <label>To Date</label>
+                <input type="date" id="toDate" required>
+
+                <textarea id="leaveReason" placeholder="Enter Leave Reason" required></textarea>
+
+                <button type="submit">Apply Leave</button>
+
+            </form>
+        </div>
+
+        <div class="history-section">
+            <h2>Leave History</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Leave Type</th>
+                        <th>From Date</th>
+                        <th>To Date</th>
+                        <th>Days</th>
+                        <th>Status</th>
+                        <th>Staff Comment</th>
+                    </tr>
+                </thead>
+
+                <tbody id="leaveHistoryBody">
+                    <tr>
+                        <td colspan="6">No leave applications yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" onclick="logout()">Logout</button>
+
+    </div>
+    <!-- STAFF DASHBOARD -->
+<div class="container hidden" id="staffDashboard">
+
+    <h1>Staff Dashboard</h1>
+
+    <div class="profile-section">
+        <h2>Staff Profile</h2>
+        <p>Name: <span id="staffDashboardName"></span></p>
+        <p>Staff ID: <span id="staffDashboardId"></span></p>
+        <p>Email: <span id="staffDashboardEmail"></span></p>
+    </div>
+
+    <div class="history-section">
+        <h2>Student Leave Applications</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Register Number</th>
+                    <th>Department</th>
+                    <th>Leave Type</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="staffLeaveTable">
+                <tr>
+                    <td colspan="10">No leave applications found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" onclick="logout()">Logout</button>
+
+</div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
