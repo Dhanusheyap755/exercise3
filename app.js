@@ -10,9 +10,9 @@ const cors = require("cors");
 const app = express();
 app.use(cors({
     origin: "https://dhanusheyap755.github.io",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    credentials: false
 }));
+
 
 app.options(/.*/, cors());
 app.use(express.json());
