@@ -204,15 +204,26 @@ async function loadStudentDashboard() {
 
 
 // LOGOUT
+
 function logout() {
+    // Clear saved login details
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
+    // Hide both dashboards
     document.getElementById("studentDashboard").classList.add("hidden");
+    document.getElementById("staffDashboard").classList.add("hidden");
+
+    // Show login section
     document.getElementById("authSection").classList.remove("hidden");
 
+    // Clear old messages
+    document.getElementById("message").textContent = "";
+
+    // Show the default login page
     showStudentLogin();
 }
+
 
 document.getElementById("applyLeaveForm").addEventListener("submit", async function(e) {
     e.preventDefault();

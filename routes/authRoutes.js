@@ -78,7 +78,12 @@ router.post("/register", async (req, res) => {
             SECRET,
             { expiresIn: "1d" }
         );
-
+        console.log("[STUDENT REGISTERED]", {
+    name: newUser.name,
+    registerNumber: newUser.registerNumber,
+    department: newUser.department,
+    email: newUser.email
+});
         res.status(201).json({
             message: "Student registration successful!",
             token,
@@ -173,7 +178,11 @@ router.post("/login", async (req, res) => {
             SECRET,
             { expiresIn: "1d" }
         );
-
+        console.log("[LOGIN SUCCESS]", {
+            name: user.name,
+            email: user.email,
+            role: user.role
+       });
         res.json({
             message: "Login successful!",
             token,

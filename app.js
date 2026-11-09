@@ -6,11 +6,20 @@ const connectDB = require("./config/db");
 const User = require("./models/User");
 const authRoutes = require("./routes/authRoutes");
 const leaveRoutes = require("./routes/leaveRoutes");
-
+const cors = require("cors");
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+    if (req.path.startsWith("/api/")) {
+        console.log(`\n[API] ${req.method} ${req.originalUrl}`);
+        console.log("Time:", new Date().toLocaleString());
+    }
+    next();
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/leaves", leaveRoutes);
@@ -41,11 +50,19 @@ async function seedManager() {
     }
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 connectDB()
-  .then(seedManager)
-  .then(() => app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`)))
+  .then(async () => {
+      console.log("========== DATABASE STATUS ==========");
+      console.log("MongoDB connected successfully!");
+      console.log("Database Name:", require("mongoose").connection.name);
+      console.log("Connection State:", require("mongoose").connection.readyState === 1 ? "Connected" : "Disconnected");
+      console.log("=====================================");
+
+      await seedManager();
+  })
+  .then(() => app.listen(PORT, () => console.log(`Server running at port ${PORT}`)))
   .catch(error => {
-    console.error("Startup failed:", error.message);
-    process.exit(1);
+      console.error("Startup failed:", error.message);
+      process.exit(1);
   });
