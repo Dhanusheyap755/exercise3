@@ -1,4 +1,10 @@
 
+const API_BASE = "https://leave-management-system-2-mu8w.onrender.com";
+
+// =====================================
+// FORM NAVIGATION
+// =====================================
+
 function hideAllForms() {
     document.getElementById("studentLoginForm").classList.add("hidden");
     document.getElementById("studentRegisterForm").classList.add("hidden");
@@ -27,6 +33,10 @@ function showStaffLogin() {
     document.querySelectorAll(".tab")[2].classList.add("active");
 }
 
+// =====================================
+// STUDENT REGISTRATION
+// =====================================
+
 document.getElementById("studentRegisterForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
@@ -40,7 +50,7 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
     };
 
     try {
-        const response = await fetch("/api/auth/register", {
+        const response = await fetch(`${API_BASE}/api/auth/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -57,11 +67,16 @@ document.getElementById("studentRegisterForm").addEventListener("submit", async 
         }
 
     } catch (error) {
+        console.error("Registration error:", error);
+
         document.getElementById("message").textContent =
             "Server connection failed!";
     }
 });
 
+// =====================================
+// STUDENT LOGIN
+// =====================================
 
 document.getElementById("studentLoginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -73,7 +88,7 @@ document.getElementById("studentLoginForm").addEventListener("submit", async fun
     };
 
     try {
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -86,20 +101,26 @@ document.getElementById("studentLoginForm").addEventListener("submit", async fun
         document.getElementById("message").textContent = result.message;
 
         if (response.ok) {
-    localStorage.setItem("token", result.token);
-    localStorage.setItem("user", JSON.stringify(result.user));
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", JSON.stringify(result.user));
 
-    document.getElementById("authSection").classList.add("hidden");
-    document.getElementById("studentDashboard").classList.remove("hidden");
+            document.getElementById("authSection").classList.add("hidden");
+            document.getElementById("studentDashboard").classList.remove("hidden");
 
-    loadStudentDashboard();
-}
+            await loadStudentDashboard();
+        }
 
     } catch (error) {
+        console.error("Student login error:", error);
+
         document.getElementById("message").textContent =
             "Server connection failed!";
     }
 });
+
+// =====================================
+// STAFF LOGIN
+// =====================================
 
 document.getElementById("staffLoginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -112,7 +133,7 @@ document.getElementById("staffLoginForm").addEventListener("submit", async funct
     };
 
     try {
-        const response = await fetch("/api/auth/login", {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -125,23 +146,28 @@ document.getElementById("staffLoginForm").addEventListener("submit", async funct
         document.getElementById("message").textContent = result.message;
 
         if (response.ok) {
-    localStorage.setItem("token", result.token);
-    localStorage.setItem("user", JSON.stringify(result.user));
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", JSON.stringify(result.user));
 
-    document.getElementById("authSection").classList.add("hidden");
+            document.getElementById("authSection").classList.add("hidden");
+            document.getElementById("staffDashboard").classList.remove("hidden");
 
-    document.getElementById("staffDashboard").classList.remove("hidden");
+            await loadStaffDashboard();
+        }
 
-    loadStaffDashboard();
-}
     } catch (error) {
+        console.error("Staff login error:", error);
+
         document.getElementById("message").textContent =
             "Server connection failed!";
     }
 });
 
-async function loadStudentDashboard() {
+// =====================================
+// STUDENT DASHBOARD
+// =====================================
 
+async function loadStudentDashboard() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user) {
@@ -158,7 +184,7 @@ async function loadStudentDashboard() {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch("/api/leaves/mine", {
+        const response = await fetch(`${API_BASE}/api/leaves/mine`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -202,28 +228,27 @@ async function loadStudentDashboard() {
     }
 }
 
-
+// =====================================
 // LOGOUT
+// =====================================
 
 function logout() {
-    // Clear saved login details
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    // Hide both dashboards
     document.getElementById("studentDashboard").classList.add("hidden");
     document.getElementById("staffDashboard").classList.add("hidden");
 
-    // Show login section
     document.getElementById("authSection").classList.remove("hidden");
 
-    // Clear old messages
     document.getElementById("message").textContent = "";
 
-    // Show the default login page
     showStudentLogin();
 }
 
+// =====================================
+// APPLY LEAVE
+// =====================================
 
 document.getElementById("applyLeaveForm").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -238,7 +263,7 @@ document.getElementById("applyLeaveForm").addEventListener("submit", async funct
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch("/api/leaves", {
+        const response = await fetch(`${API_BASE}/api/leaves`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -260,13 +285,18 @@ document.getElementById("applyLeaveForm").addEventListener("submit", async funct
         }
 
     } catch (error) {
+        console.error("Apply leave error:", error);
+
         document.getElementById("message").textContent =
             "Server connection failed!";
     }
 });
-// LOAD STAFF DASHBOARD
-async function loadStaffDashboard() {
 
+// =====================================
+// STAFF DASHBOARD
+// =====================================
+
+async function loadStaffDashboard() {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user) {
@@ -274,7 +304,6 @@ async function loadStaffDashboard() {
         return;
     }
 
-    // Display staff details
     document.getElementById("staffDashboardName").textContent = user.name || "";
     document.getElementById("staffDashboardId").textContent = user.staffId || "";
     document.getElementById("staffDashboardEmail").textContent = user.email || "";
@@ -282,7 +311,7 @@ async function loadStaffDashboard() {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch("/api/leaves/all", {
+        const response = await fetch(`${API_BASE}/api/leaves/all`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -340,9 +369,12 @@ async function loadStaffDashboard() {
         alert(error.message);
     }
 }
-// APPROVE OR REJECT LEAVE
-async function updateLeaveStatus(leaveId, status) {
 
+// =====================================
+// APPROVE OR REJECT LEAVE
+// =====================================
+
+async function updateLeaveStatus(leaveId, status) {
     const managerComment = prompt("Enter staff comment (optional):");
 
     if (managerComment === null) {
@@ -352,7 +384,7 @@ async function updateLeaveStatus(leaveId, status) {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await fetch(`/api/leaves/${leaveId}/status`, {
+        const response = await fetch(`${API_BASE}/api/leaves/${leaveId}/status`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -372,11 +404,10 @@ async function updateLeaveStatus(leaveId, status) {
 
         alert(result.message);
 
-        // Refresh staff dashboard
         await loadStaffDashboard();
 
     } catch (error) {
+        console.error("Update leave status error:", error);
         alert(error.message);
     }
 }
-
